@@ -9,11 +9,11 @@
 #import "LZHSliderBar.h"
 
 #define LZH_ITEMCOLOR_NORMAL [UIColor colorWithRed:153.0/255 green:153.0/255 blue:153.0/255 alpha:1]
-#define LZH_ITEMCOLOR_SELECTED [UIColor colorWithRed:111.0/255 green:68.0/255 blue:28.0/255 alpha:1]
-#define LZH_SLIDER_COLOR [UIColor colorWithRed:162.0/255 green:219.0/255 blue:246.0/255 alpha:1]
+#define LZH_ITEMCOLOR_SELECTED [UIColor colorWithRed:0.0/255 green:0.0/255 blue:0.0/255 alpha:1]
+#define LZH_SLIDER_COLOR [UIColor colorWithRed:255.0/255 green:141.0/255 blue:0.0/255 alpha:1]
 #define LZH_ITEMBUTTON_WIDTH 60
-#define LZH_SLIDER_HEIGHT 5
-#define LZH_SLIDER_LENGTH 40
+#define LZH_SLIDER_HEIGHT 3
+#define LZH_SLIDER_LENGTH 30
 
 //声明本类的接口
 @interface LZHSliderBar()
@@ -70,7 +70,7 @@
     self = [super initWithFrame:frame];
     if(self){
         //设置滑动条的背景颜色,当前为230灰色.
-        self.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -131,7 +131,8 @@
     UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitleColor:LZH_ITEMCOLOR_NORMAL forState:UIControlStateNormal];
-    [button setTitleColor:LZHDiaryThemeBlueColor forState:UIControlStateSelected];
+    [button setTitleColor:LZH_ITEMCOLOR_SELECTED forState:UIControlStateSelected];
+    [button.titleLabel setFont:[UIFont fontWithName:@"PingFang SC" size:17.0f]];
     [button addTarget:self action:@selector(itemClick:) forControlEvents:UIControlEventTouchUpInside];
     //此句话会触发布局子布局函数!
     [self addSubview:button];

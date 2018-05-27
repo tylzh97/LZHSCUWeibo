@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF20E23220B71BF600AE7D71 /* WeiboViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF20E23020B71BF600AE7D71 /* WeiboViewController.m */; };
+		CF20E23320B71BF600AE7D71 /* WeiboViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF20E23120B71BF600AE7D71 /* WeiboViewController.xib */; };
+		CF20E23720B71D3D00AE7D71 /* LZHWeiboCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF20E23620B71D3D00AE7D71 /* LZHWeiboCell.m */; };
 		CF86092820B43CA5009397F3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF86092720B43CA5009397F3 /* AppDelegate.m */; };
 		CF86092B20B43CA5009397F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF86092A20B43CA5009397F3 /* ViewController.m */; };
 		CF86092E20B43CA5009397F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF86092C20B43CA5009397F3 /* Main.storyboard */; };
@@ -77,6 +80,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CF20E22F20B71BF600AE7D71 /* WeiboViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeiboViewController.h; sourceTree = "<group>"; };
+		CF20E23020B71BF600AE7D71 /* WeiboViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeiboViewController.m; sourceTree = "<group>"; };
+		CF20E23120B71BF600AE7D71 /* WeiboViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WeiboViewController.xib; sourceTree = "<group>"; };
+		CF20E23520B71D3D00AE7D71 /* LZHWeiboCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LZHWeiboCell.h; sourceTree = "<group>"; };
+		CF20E23620B71D3D00AE7D71 /* LZHWeiboCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LZHWeiboCell.m; sourceTree = "<group>"; };
 		CF86092320B43CA5009397F3 /* LZHSCUWeibo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LZHSCUWeibo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF86092620B43CA5009397F3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CF86092720B43CA5009397F3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -202,6 +210,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CF20E22E20B71BC900AE7D71 /* 微博主界面 */ = {
+			isa = PBXGroup;
+			children = (
+				CF20E22F20B71BF600AE7D71 /* WeiboViewController.h */,
+				CF20E23020B71BF600AE7D71 /* WeiboViewController.m */,
+				CF20E23120B71BF600AE7D71 /* WeiboViewController.xib */,
+				CF20E23420B71C4600AE7D71 /* 微博cell */,
+			);
+			path = "微博主界面";
+			sourceTree = "<group>";
+		};
+		CF20E23420B71C4600AE7D71 /* 微博cell */ = {
+			isa = PBXGroup;
+			children = (
+				CF20E23520B71D3D00AE7D71 /* LZHWeiboCell.h */,
+				CF20E23620B71D3D00AE7D71 /* LZHWeiboCell.m */,
+			);
+			path = "微博cell";
+			sourceTree = "<group>";
+		};
 		CF86091A20B43CA5009397F3 = {
 			isa = PBXGroup;
 			children = (
@@ -342,15 +370,15 @@
 		CFAAB09420B64A230042A12E /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				CFAAB09D20B64A230042A12E /* MJRefreshFooter.h */,
 				CFAAB09520B64A230042A12E /* MJRefreshFooter.m */,
-				CFAAB09620B64A230042A12E /* MJRefreshComponent.h */,
+				CFAAB09B20B64A230042A12E /* MJRefreshHeader.h */,
 				CFAAB09720B64A230042A12E /* MJRefreshHeader.m */,
 				CFAAB09820B64A230042A12E /* MJRefreshAutoFooter.h */,
-				CFAAB09920B64A230042A12E /* MJRefreshBackFooter.m */,
 				CFAAB09A20B64A230042A12E /* MJRefreshAutoFooter.m */,
-				CFAAB09B20B64A230042A12E /* MJRefreshHeader.h */,
+				CFAAB09620B64A230042A12E /* MJRefreshComponent.h */,
 				CFAAB09C20B64A230042A12E /* MJRefreshComponent.m */,
-				CFAAB09D20B64A230042A12E /* MJRefreshFooter.h */,
+				CFAAB09920B64A230042A12E /* MJRefreshBackFooter.m */,
 				CFAAB09E20B64A230042A12E /* MJRefreshBackFooter.h */,
 			);
 			path = Base;
@@ -359,6 +387,7 @@
 		CFCE49A520B5C5FF00CA9BD2 /* MyView */ = {
 			isa = PBXGroup;
 			children = (
+				CF20E22E20B71BC900AE7D71 /* 微博主界面 */,
 				CFCE49A620B5C5FF00CA9BD2 /* 查看微博界面 */,
 				CFCE49B120B5C5FF00CA9BD2 /* 登陆界面 */,
 				CFCE49B420B5C5FF00CA9BD2 /* 添加微博界面 */,
@@ -414,17 +443,17 @@
 		CFCE49BA20B5C5FF00CA9BD2 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				CFCE49BB20B5C5FF00CA9BD2 /* myFont */,
+				CFCE49BB20B5C5FF00CA9BD2 /* 字体 */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
 		};
-		CFCE49BB20B5C5FF00CA9BD2 /* myFont */ = {
+		CFCE49BB20B5C5FF00CA9BD2 /* 字体 */ = {
 			isa = PBXGroup;
 			children = (
 				CFCE49BC20B5C5FF00CA9BD2 /* linhuiti.otf */,
 			);
-			path = myFont;
+			path = "字体";
 			sourceTree = "<group>";
 		};
 		CFCE49BD20B5C5FF00CA9BD2 /* Third-party package */ = {
@@ -522,8 +551,8 @@
 			isa = PBXGroup;
 			children = (
 				CFCE49D920B5C5FF00CA9BD2 /* LZHSliderBar.h */,
-				CFCE49DA20B5C5FF00CA9BD2 /* LZHSliderViewController.h */,
 				CFCE49DB20B5C5FF00CA9BD2 /* LZHSliderBar.m */,
+				CFCE49DA20B5C5FF00CA9BD2 /* LZHSliderViewController.h */,
 				CFCE49DC20B5C5FF00CA9BD2 /* LZHSliderViewController.m */,
 			);
 			path = SliderController;
@@ -646,6 +675,7 @@
 				CFAAB0A120B64A230042A12E /* MJRefresh.bundle in Resources */,
 				CF86093020B43CA7009397F3 /* Assets.xcassets in Resources */,
 				CFCE49F020B5C5FF00CA9BD2 /* linhuiti.otf in Resources */,
+				CF20E23320B71BF600AE7D71 /* WeiboViewController.xib in Resources */,
 				CFCE49E720B5C5FF00CA9BD2 /* DiaryHistory.xib in Resources */,
 				CF86092E20B43CA5009397F3 /* Main.storyboard in Resources */,
 			);
@@ -687,6 +717,7 @@
 				CFAAB0AA20B64A230042A12E /* MJRefreshAutoNormalFooter.m in Sources */,
 				CFAAB0AB20B64A230042A12E /* MJRefreshNormalHeader.m in Sources */,
 				CFAAB0A020B64A230042A12E /* MJRefreshConst.m in Sources */,
+				CF20E23220B71BF600AE7D71 /* WeiboViewController.m in Sources */,
 				CFCE49E920B5C5FF00CA9BD2 /* LZHCellContentView.m in Sources */,
 				CFAAB0AF20B64A230042A12E /* MJRefreshHeader.m in Sources */,
 				CFCE49F520B5C5FF00CA9BD2 /* ZFSettingCell.m in Sources */,
@@ -702,6 +733,7 @@
 				CFAAB0AD20B64A230042A12E /* MJRefreshGifHeader.m in Sources */,
 				CFAAB0B020B64A230042A12E /* MJRefreshBackFooter.m in Sources */,
 				CFCE49EA20B5C5FF00CA9BD2 /* DiaryHistoryViewCell.m in Sources */,
+				CF20E23720B71D3D00AE7D71 /* LZHWeiboCell.m in Sources */,
 				CFAAB0A920B64A230042A12E /* MJRefreshAutoGifFooter.m in Sources */,
 				CFAAB0B120B64A230042A12E /* MJRefreshAutoFooter.m in Sources */,
 				CF86093620B43CA7009397F3 /* main.m in Sources */,

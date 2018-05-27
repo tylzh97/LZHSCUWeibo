@@ -84,19 +84,28 @@
     //
     CGFloat sliderBarH = 88;
     //iPhone X 将高度设置为88
-    if(true){//screenSize.width == 375 && screenSize.height == 812){
-        sliderBarH = 132;
-    }
+    //if(true){//screenSize.width == 375 && screenSize.height == 812){
+    //    sliderBarH = 132;
+    //}
     
     
     UIView * navBarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, sliderBarH)];
     navBarView.backgroundColor = [UIColor whiteColor];
+    
+    UIBlurEffect * effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+    UIVisualEffectView * effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+    effectView.frame = navBarView.bounds;
+    
     [self.view addSubview:navBarView];
+    
+    UIView * sliderBarLine = [[UIView alloc] initWithFrame:CGRectMake(0, sliderBarH-0.5, ScreenWidth, 0.5)];
+    sliderBarLine.backgroundColor = [UIColor grayColor];
+    [navBarView addSubview:sliderBarLine];
     
     
     // 创建SliderBar并设置大小 应该使用autolayout
-    LZHSliderBar* sliderBar = [[LZHSliderBar alloc]initWithFrame:CGRectMake(60, 44, sliderBarW-120, 44)];
-    sliderBar.backgroundColor = [UIColor whiteColor];
+    LZHSliderBar* sliderBar = [[LZHSliderBar alloc]initWithFrame:CGRectMake(100, 50, sliderBarW-200, 34)];
+    sliderBar.backgroundColor = [UIColor clearColor];
     self.sliderBar = sliderBar;
     self.sliderBar.delegate = self;
     
@@ -112,6 +121,7 @@
     //[self.settingButton setBackgroundColor:[UIColor redColor]];
     [navBarView addSubview:self.settingButton];
     
+    /*
     self.vcDiscribeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
     [self.vcDiscribeLabel setText:@"日记"];
     [self.vcDiscribeLabel setTextColor:LZHDiaryThemeBlueColor];
@@ -120,6 +130,7 @@
     self.vcDiscribeLabel.textAlignment = NSTextAlignmentCenter;
     //[self.vcDiscribeLabel setBackgroundColor:[UIColor redColor]];
     [navBarView addSubview:self.vcDiscribeLabel];
+     */
 }
 
 - (void) modalSetting:(UIButton *) settingButton{
