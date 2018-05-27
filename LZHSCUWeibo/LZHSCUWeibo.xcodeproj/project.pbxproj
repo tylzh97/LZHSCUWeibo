@@ -38,11 +38,6 @@
 		CFAAB0B020B64A230042A12E /* MJRefreshBackFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = CFAAB09920B64A230042A12E /* MJRefreshBackFooter.m */; };
 		CFAAB0B120B64A230042A12E /* MJRefreshAutoFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = CFAAB09A20B64A230042A12E /* MJRefreshAutoFooter.m */; };
 		CFAAB0B220B64A230042A12E /* MJRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = CFAAB09C20B64A230042A12E /* MJRefreshComponent.m */; };
-		CFCE49E720B5C5FF00CA9BD2 /* DiaryHistory.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFCE49A820B5C5FF00CA9BD2 /* DiaryHistory.xib */; };
-		CFCE49E820B5C5FF00CA9BD2 /* floatView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCE49AC20B5C5FF00CA9BD2 /* floatView.m */; };
-		CFCE49E920B5C5FF00CA9BD2 /* LZHCellContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCE49AD20B5C5FF00CA9BD2 /* LZHCellContentView.m */; };
-		CFCE49EA20B5C5FF00CA9BD2 /* DiaryHistoryViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCE49AF20B5C5FF00CA9BD2 /* DiaryHistoryViewCell.m */; };
-		CFCE49EB20B5C5FF00CA9BD2 /* DiaryHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCE49B020B5C5FF00CA9BD2 /* DiaryHistory.m */; };
 		CFCE49EC20B5C5FF00CA9BD2 /* LZHLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCE49B320B5C5FF00CA9BD2 /* LZHLoginViewController.m */; };
 		CFCE49ED20B5C5FF00CA9BD2 /* AddDiaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCE49B520B5C5FF00CA9BD2 /* AddDiaryViewController.m */; };
 		CFCE49EE20B5C5FF00CA9BD2 /* DiaryView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFCE49B820B5C5FF00CA9BD2 /* DiaryView.m */; };
@@ -142,15 +137,6 @@
 		CFAAB09D20B64A230042A12E /* MJRefreshFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJRefreshFooter.h; sourceTree = "<group>"; };
 		CFAAB09E20B64A230042A12E /* MJRefreshBackFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJRefreshBackFooter.h; sourceTree = "<group>"; };
 		CFCE499820B5C5FF00CA9BD2 /* LZHMarco.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZHMarco.h; sourceTree = "<group>"; };
-		CFCE49A720B5C5FF00CA9BD2 /* DiaryHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiaryHistory.h; sourceTree = "<group>"; };
-		CFCE49A820B5C5FF00CA9BD2 /* DiaryHistory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DiaryHistory.xib; sourceTree = "<group>"; };
-		CFCE49AA20B5C5FF00CA9BD2 /* LZHCellContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZHCellContentView.h; sourceTree = "<group>"; };
-		CFCE49AB20B5C5FF00CA9BD2 /* DiaryHistoryViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiaryHistoryViewCell.h; sourceTree = "<group>"; };
-		CFCE49AC20B5C5FF00CA9BD2 /* floatView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = floatView.m; sourceTree = "<group>"; };
-		CFCE49AD20B5C5FF00CA9BD2 /* LZHCellContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZHCellContentView.m; sourceTree = "<group>"; };
-		CFCE49AE20B5C5FF00CA9BD2 /* floatView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = floatView.h; sourceTree = "<group>"; };
-		CFCE49AF20B5C5FF00CA9BD2 /* DiaryHistoryViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiaryHistoryViewCell.m; sourceTree = "<group>"; };
-		CFCE49B020B5C5FF00CA9BD2 /* DiaryHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiaryHistory.m; sourceTree = "<group>"; };
 		CFCE49B220B5C5FF00CA9BD2 /* LZHLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZHLoginViewController.h; sourceTree = "<group>"; };
 		CFCE49B320B5C5FF00CA9BD2 /* LZHLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZHLoginViewController.m; sourceTree = "<group>"; };
 		CFCE49B520B5C5FF00CA9BD2 /* AddDiaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddDiaryViewController.m; sourceTree = "<group>"; };
@@ -388,35 +374,10 @@
 			isa = PBXGroup;
 			children = (
 				CF20E22E20B71BC900AE7D71 /* 微博主界面 */,
-				CFCE49A620B5C5FF00CA9BD2 /* 查看微博界面 */,
 				CFCE49B120B5C5FF00CA9BD2 /* 登陆界面 */,
 				CFCE49B420B5C5FF00CA9BD2 /* 添加微博界面 */,
 			);
 			path = MyView;
-			sourceTree = "<group>";
-		};
-		CFCE49A620B5C5FF00CA9BD2 /* 查看微博界面 */ = {
-			isa = PBXGroup;
-			children = (
-				CFCE49A720B5C5FF00CA9BD2 /* DiaryHistory.h */,
-				CFCE49B020B5C5FF00CA9BD2 /* DiaryHistory.m */,
-				CFCE49A820B5C5FF00CA9BD2 /* DiaryHistory.xib */,
-				CFCE49A920B5C5FF00CA9BD2 /* 日记TableView的cell */,
-			);
-			path = "查看微博界面";
-			sourceTree = "<group>";
-		};
-		CFCE49A920B5C5FF00CA9BD2 /* 日记TableView的cell */ = {
-			isa = PBXGroup;
-			children = (
-				CFCE49AA20B5C5FF00CA9BD2 /* LZHCellContentView.h */,
-				CFCE49AD20B5C5FF00CA9BD2 /* LZHCellContentView.m */,
-				CFCE49AB20B5C5FF00CA9BD2 /* DiaryHistoryViewCell.h */,
-				CFCE49AF20B5C5FF00CA9BD2 /* DiaryHistoryViewCell.m */,
-				CFCE49AC20B5C5FF00CA9BD2 /* floatView.m */,
-				CFCE49AE20B5C5FF00CA9BD2 /* floatView.h */,
-			);
-			path = "日记TableView的cell";
 			sourceTree = "<group>";
 		};
 		CFCE49B120B5C5FF00CA9BD2 /* 登陆界面 */ = {
@@ -676,7 +637,6 @@
 				CF86093020B43CA7009397F3 /* Assets.xcassets in Resources */,
 				CFCE49F020B5C5FF00CA9BD2 /* linhuiti.otf in Resources */,
 				CF20E23320B71BF600AE7D71 /* WeiboViewController.xib in Resources */,
-				CFCE49E720B5C5FF00CA9BD2 /* DiaryHistory.xib in Resources */,
 				CF86092E20B43CA5009397F3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -708,7 +668,6 @@
 				CFCE49F820B5C5FF00CA9BD2 /* GCDAsyncUdpSocket.m in Sources */,
 				CFAAB0A620B64A230042A12E /* MJRefreshBackStateFooter.m in Sources */,
 				CFAAB0A220B64A230042A12E /* UIScrollView+MJExtension.m in Sources */,
-				CFCE49E820B5C5FF00CA9BD2 /* floatView.m in Sources */,
 				CF86092B20B43CA5009397F3 /* ViewController.m in Sources */,
 				CFAAB0B220B64A230042A12E /* MJRefreshComponent.m in Sources */,
 				CFAAB0A520B64A230042A12E /* MJRefreshBackGifFooter.m in Sources */,
@@ -718,7 +677,6 @@
 				CFAAB0AB20B64A230042A12E /* MJRefreshNormalHeader.m in Sources */,
 				CFAAB0A020B64A230042A12E /* MJRefreshConst.m in Sources */,
 				CF20E23220B71BF600AE7D71 /* WeiboViewController.m in Sources */,
-				CFCE49E920B5C5FF00CA9BD2 /* LZHCellContentView.m in Sources */,
 				CFAAB0AF20B64A230042A12E /* MJRefreshHeader.m in Sources */,
 				CFCE49F520B5C5FF00CA9BD2 /* ZFSettingCell.m in Sources */,
 				CFCE49F420B5C5FF00CA9BD2 /* ZFSettingItem.m in Sources */,
@@ -728,11 +686,9 @@
 				CFCE49FB20B5C5FF00CA9BD2 /* LZHSliderViewController.m in Sources */,
 				CFCE49FC20B5C5FF00CA9BD2 /* LZHJsonEncoder.m in Sources */,
 				CFAAB0A320B64A230042A12E /* NSBundle+MJRefresh.m in Sources */,
-				CFCE49EB20B5C5FF00CA9BD2 /* DiaryHistory.m in Sources */,
 				CFCE49F220B5C5FF00CA9BD2 /* ZFBaseSettingViewController.m in Sources */,
 				CFAAB0AD20B64A230042A12E /* MJRefreshGifHeader.m in Sources */,
 				CFAAB0B020B64A230042A12E /* MJRefreshBackFooter.m in Sources */,
-				CFCE49EA20B5C5FF00CA9BD2 /* DiaryHistoryViewCell.m in Sources */,
 				CF20E23720B71D3D00AE7D71 /* LZHWeiboCell.m in Sources */,
 				CFAAB0A920B64A230042A12E /* MJRefreshAutoGifFooter.m in Sources */,
 				CFAAB0B120B64A230042A12E /* MJRefreshAutoFooter.m in Sources */,
