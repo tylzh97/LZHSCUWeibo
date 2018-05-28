@@ -12,10 +12,13 @@
 
 #import "LZHWeiboCell.h"
 
+#import "LZHJsonEncoder.h"
+
+#import "lzhHash.h"
 
 #import "MJRefresh.h"
 
-@interface WeiboViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface WeiboViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, NSURLConnectionDataDelegate>
 
 @property (strong, nonatomic) AppDelegate * appDelegate;
 

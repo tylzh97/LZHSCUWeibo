@@ -10,6 +10,7 @@
 		CF20E23220B71BF600AE7D71 /* WeiboViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF20E23020B71BF600AE7D71 /* WeiboViewController.m */; };
 		CF20E23320B71BF600AE7D71 /* WeiboViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF20E23120B71BF600AE7D71 /* WeiboViewController.xib */; };
 		CF20E23720B71D3D00AE7D71 /* LZHWeiboCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF20E23620B71D3D00AE7D71 /* LZHWeiboCell.m */; };
+		CF6F93EC20BBE867005112F7 /* lzhHash.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6F93EB20BBE867005112F7 /* lzhHash.m */; };
 		CF86092820B43CA5009397F3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF86092720B43CA5009397F3 /* AppDelegate.m */; };
 		CF86092B20B43CA5009397F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF86092A20B43CA5009397F3 /* ViewController.m */; };
 		CF86092E20B43CA5009397F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF86092C20B43CA5009397F3 /* Main.storyboard */; };
@@ -80,6 +81,8 @@
 		CF20E23120B71BF600AE7D71 /* WeiboViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WeiboViewController.xib; sourceTree = "<group>"; };
 		CF20E23520B71D3D00AE7D71 /* LZHWeiboCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LZHWeiboCell.h; sourceTree = "<group>"; };
 		CF20E23620B71D3D00AE7D71 /* LZHWeiboCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LZHWeiboCell.m; sourceTree = "<group>"; };
+		CF6F93EA20BBE867005112F7 /* lzhHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzhHash.h; sourceTree = "<group>"; };
+		CF6F93EB20BBE867005112F7 /* lzhHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = lzhHash.m; sourceTree = "<group>"; };
 		CF86092320B43CA5009397F3 /* LZHSCUWeibo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LZHSCUWeibo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF86092620B43CA5009397F3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CF86092720B43CA5009397F3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -216,6 +219,15 @@
 			path = "微博cell";
 			sourceTree = "<group>";
 		};
+		CF6F93E920BBE85A005112F7 /* HASH */ = {
+			isa = PBXGroup;
+			children = (
+				CF6F93EA20BBE867005112F7 /* lzhHash.h */,
+				CF6F93EB20BBE867005112F7 /* lzhHash.m */,
+			);
+			path = HASH;
+			sourceTree = "<group>";
+		};
 		CF86091A20B43CA5009397F3 = {
 			isa = PBXGroup;
 			children = (
@@ -273,6 +285,13 @@
 				CF86094C20B43CA7009397F3 /* Info.plist */,
 			);
 			path = LZHSCUWeiboUITests;
+			sourceTree = "<group>";
+		};
+		CF9B514720BA5ADA0068DBCB /* 发微博界面 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "发微博界面";
 			sourceTree = "<group>";
 		};
 		CFAAB07020B64A230042A12E /* MJRefresh */ = {
@@ -373,6 +392,7 @@
 		CFCE49A520B5C5FF00CA9BD2 /* MyView */ = {
 			isa = PBXGroup;
 			children = (
+				CF9B514720BA5ADA0068DBCB /* 发微博界面 */,
 				CF20E22E20B71BC900AE7D71 /* 微博主界面 */,
 				CFCE49B120B5C5FF00CA9BD2 /* 登陆界面 */,
 				CFCE49B420B5C5FF00CA9BD2 /* 添加微博界面 */,
@@ -392,9 +412,9 @@
 		CFCE49B420B5C5FF00CA9BD2 /* 添加微博界面 */ = {
 			isa = PBXGroup;
 			children = (
+				CFCE49B720B5C5FF00CA9BD2 /* AddDiaryViewController.h */,
 				CFCE49B520B5C5FF00CA9BD2 /* AddDiaryViewController.m */,
 				CFCE49B620B5C5FF00CA9BD2 /* DiaryView.h */,
-				CFCE49B720B5C5FF00CA9BD2 /* AddDiaryViewController.h */,
 				CFCE49B820B5C5FF00CA9BD2 /* DiaryView.m */,
 				CFCE49B920B5C5FF00CA9BD2 /* DiaryView.xib */,
 			);
@@ -502,6 +522,7 @@
 		CFCE49D720B5C5FF00CA9BD2 /* MyPackage */ = {
 			isa = PBXGroup;
 			children = (
+				CF6F93E920BBE85A005112F7 /* HASH */,
 				CFCE49D820B5C5FF00CA9BD2 /* SliderController */,
 				CFCE49DD20B5C5FF00CA9BD2 /* Json */,
 			);
@@ -668,6 +689,7 @@
 				CFCE49F820B5C5FF00CA9BD2 /* GCDAsyncUdpSocket.m in Sources */,
 				CFAAB0A620B64A230042A12E /* MJRefreshBackStateFooter.m in Sources */,
 				CFAAB0A220B64A230042A12E /* UIScrollView+MJExtension.m in Sources */,
+				CF6F93EC20BBE867005112F7 /* lzhHash.m in Sources */,
 				CF86092B20B43CA5009397F3 /* ViewController.m in Sources */,
 				CFAAB0B220B64A230042A12E /* MJRefreshComponent.m in Sources */,
 				CFAAB0A520B64A230042A12E /* MJRefreshBackGifFooter.m in Sources */,

@@ -17,6 +17,10 @@
 @property (strong, nonatomic) NSMutableArray *arrayModel;
 @property (strong, nonatomic) NSMutableArray *arrayModelDay;
 
+//接收到的网络数据
+@property (strong, nonatomic) NSMutableData * recvData;
+@property (strong, nonatomic) NSMutableArray * weiboArray;
+
 @end
 
 @implementation WeiboViewController
@@ -61,6 +65,9 @@
     UIView * positionMarkView = [[UIView alloc] initWithFrame:CGRectMake(0, 78, self.appDelegate.screenSize.width, 1)];
     positionMarkView.backgroundColor = [UIColor redColor];
     [self.view addSubview:positionMarkView];
+    
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    self.weiboArray = [defaults objectForKey:@"weiboList"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -102,13 +109,42 @@
     return _data;
 }
 
+- (NSString *) getCurrTimeString{
+    //获取系统当前时间
+    NSDate *currentDate = [NSDate date];
+    //用于格式化NSDate对象
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //设置格式：zzz表示时区
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    //NSDate转NSString
+    NSString *currentDateString = [dateFormatter stringFromDate:currentDate];
+    return currentDateString;
+}
+
+- (NSString *) getCheckCodeWithRequest:(NSString *)request andTime:(NSString *)timeStr{
+    NSString *checkCode = [lzhHash md5:[NSString stringWithFormat:@"%@%@", request, timeStr]];
+    checkCode = [lzhHash md5:[checkCode substringFromIndex:[checkCode length]-5]];
+    return [checkCode uppercaseString];
+}
+
 - (void)loadNewData
 {
-    // 1.添加假数据
-    for (int i = 0; i<5; i++) {
-        [self.data insertObject:MJRandomData atIndex:0];
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    self.recvData = [[NSMutableData alloc] init];
     
+    NSString *currTime = [self getCurrTimeString];
+    
+    //NSString * strUrl = @"http://127.0.0.1:8000/checkByTime?userID=用户id&time=时间&check=验证码&requestNumber=请求微博数";
+    
+    NSString * strUrl = [NSString stringWithFormat:@"http://127.0.0.1:8000/checkByTime?userID=%@&time=%@&check=%@&requestNumber=%d", @"userName", currTime, [self getCheckCodeWithRequest:@"checkByTime" andTime:currTime], 20 ];
+    //strUrl = [strUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    strUrl = [strUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *URL = [NSURL URLWithString:strUrl];
+    NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:URL];
+    [NSURLConnection connectionWithRequest:request delegate:self];
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    //TODO:应当使用同步请求,我使用了异步请求,将会在以后的版本中进行改进.!!!!!TODO
     // 2.模拟2秒后刷新表格UI（真实开发中，可以移除这段gcd代码）
     __weak UITableView *tableView = self.mainTableView;
     CGFloat refreashDuration = 2;
@@ -139,9 +175,57 @@
         [tableView.mj_footer endRefreshing];
     });
 }
+#pragma mark -NSURLConnectionDataDelegate的委托方法
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    //接收到服务器反馈消息(消息头)
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    //接收到部分数据
+    [self.recvData appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection{
+    //接收到所有数据
+    NSString * jsonStr = [NSString stringWithFormat:@"%@",[[NSString alloc] initWithData:self.recvData encoding:NSUTF8StringEncoding]];
+    [self setWeiboData:jsonStr];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
+    //与服务器连接出错
+    NSLog(@"与服务器连接出错");
+}
 
 
-#pragma mark UITableViewDataSource Methods
+- (void) setWeiboData:(NSString *) str{
+    NSDictionary * jsonDic = [LZHJsonEncoder dictionaryWithJsonString:str];
+    
+    NSString * response = [NSString stringWithFormat:@"%@", [jsonDic objectForKey:@"response"]];
+    
+    NSDictionary * responseDic = [LZHJsonEncoder dictionaryWithJsonString:response];
+    
+    NSString * weiboListStr = [NSString stringWithFormat:@"%@", [responseDic objectForKey:@"weiboList"]];
+    
+    NSDictionary * weiboListDic = [LZHJsonEncoder dictionaryWithJsonString:weiboListStr];
+    
+    NSMutableArray * weiboArray = [[NSMutableArray alloc] init];
+    
+    NSInteger numberOfWeibo = [[NSString stringWithFormat:@"%@", [responseDic objectForKey:@"responseNumber"]] integerValue];
+    
+    for(NSInteger i=0; i<numberOfWeibo; ++i){
+        [weiboArray addObject:[LZHJsonEncoder dictionaryWithJsonString:[weiboListDic objectForKey:[NSString stringWithFormat:@"%ld", i]] ] ];
+        //NSLog(@"\n%ld  %@   %@\n\n", (long)i, [weiboArray[i] objectForKey:@"userName"], [weiboArray[i] objectForKey:@"weiboDetail"]);
+    }
+    //设置微博列表
+    self.weiboArray = weiboArray;
+    
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:self.weiboArray forKey:@"weiboList"];
+    [defaults synchronize];
+}
+
+#pragma mark -UITableViewDataSource Methods
 // 创建 tableView 的第indexPath 所对应的 cell 的函数
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //尝试从 cell 池中获取编号为 weiboCell 的 cell
@@ -151,13 +235,20 @@
         //创建一个新的 cell, 并将此 cell 放入 cell 池中
         cell = [[LZHWeiboCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"weiboCell"];
     }
-    //对 cell 进行初始化
-    [cell setUserNickname:@"开心的狗腿子"];
-    [cell setPublishedTime:[NSDate date]];
-    [cell setPublishedSource:@"来自微博时光机"];
-    [cell setWeiboDetail:@"我叫工藤新一,是个侦探.一天,在我和女朋友毛利兰约会的过程中,不小心被黑衣人袭击.醒来后,发现我竟然变成了小学生.如果被那群黑衣人发现,我一定性命不保.在阿笠博士的帮助下,我化身成为江户川泽民,戴上了黑框眼镜,开始了我的小学生活.你说我一个高中生侦探,怎么就到米花小学当起了侦探呢?"];
-    [cell setCommentsNumber:233];
-    [cell setThumbsupNumber:6666];
+    //获取当前微博字典
+    NSMutableDictionary * currWeibo = [self.weiboArray objectAtIndex:indexPath.row];
+    //{userID=[用户 id],username=[用户名],weiboTime=[微博发送时间],weiboDetail=[微博详情],commentNumber=[评论数],agreeNumber=[点赞数], weiboID=[微博 ID]},
+    
+    NSDateFormatter *formatter1 = [[NSDateFormatter alloc]init];
+    [formatter1 setDateFormat:@"yyyy-MM-dd HH-mm-sss"];
+    NSDate *weiboDate = [formatter1 dateFromString:[currWeibo objectForKey:@"weiboTime"]];
+    
+    [cell setUserNickname:[currWeibo objectForKey:@"userName"] ];
+    [cell setPublishedTime:weiboDate];
+    [cell setPublishedSource:@"来自 weibo.com"];
+    [cell setWeiboDetail:[currWeibo objectForKey:@"weiboDetail"]];
+    [cell setCommentsNumber:[[currWeibo objectForKey:@"commentNumber"] intValue]];
+    [cell setThumbsupNumber:[[currWeibo objectForKey:@"agreeNumber"] intValue]];
     
     return cell;
 }
@@ -217,7 +308,8 @@
 //该函数为UITableViewDataSource 委托中的必要委托函数,用于返回每个 section 个数.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     //return self.data.count;
-    return 10;
+    //return 10;
+    return self.weiboArray.count;
 }
 
 
