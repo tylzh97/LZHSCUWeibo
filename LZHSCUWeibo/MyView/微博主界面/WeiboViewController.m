@@ -136,7 +136,10 @@
     
     //NSString * strUrl = @"http://127.0.0.1:8000/checkByTime?userID=用户id&time=时间&check=验证码&requestNumber=请求微博数";
     
-    NSString * strUrl = [NSString stringWithFormat:@"http://127.0.0.1:8000/checkByTime?userID=%@&time=%@&check=%@&requestNumber=%d", @"userName", currTime, [self getCheckCodeWithRequest:@"checkByTime" andTime:currTime], 20 ];
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    NSString * httpAddress = [defaults objectForKey:@"HTTPAddress"];
+    
+    NSString * strUrl = [NSString stringWithFormat:@"%@/checkByTime?userID=%@&time=%@&check=%@&requestNumber=%d", httpAddress, @"userName" , currTime, [self getCheckCodeWithRequest:@"checkByTime" andTime:currTime], 20 ];
     //strUrl = [strUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     strUrl = [strUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *URL = [NSURL URLWithString:strUrl];
@@ -184,17 +187,29 @@
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
     //接收到部分数据
     [self.recvData appendData:data];
+    
+    //NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+    NSString *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    NSLog(@"\n\n\n%@\n\n\n", text);
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection{
     //接收到所有数据
-    NSString * jsonStr = [NSString stringWithFormat:@"%@",[[NSString alloc] initWithData:self.recvData encoding:NSUTF8StringEncoding]];
+    //NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+    NSString *text = [[NSString alloc] initWithData:self.recvData encoding:NSUTF8StringEncoding];
+    
+    NSString * jsonStr = [NSString stringWithFormat:@"%@",text];
+    
+    NSLog(@"*******************\n\n%@\n\n**********************", jsonStr);
+    
     [self setWeiboData:jsonStr];
+    NSLog(@"数据刷新成功!");
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
     //与服务器连接出错
-    NSLog(@"与服务器连接出错");
+    NSLog(@"与服务器连接出错  %@",error);
 }
 
 
