@@ -1,18 +1,17 @@
 //
-//  WeiboViewController.m
+//  WeiboSortByLikeViewController.m
 //  LZHSCUWeibo
 //
-//  Created by 李政浩 on 2018/5/25.
+//  Created by 李政浩 on 2018/6/6.
 //  Copyright © 2018年 lzh. All rights reserved.
 //
 
-#import "WeiboViewController.h"
+#import "WeiboSortByLikeViewController.h"
 
 #define LZHScreenSize [UIScreen mainScreen].bounds.size
-
 #define MJRandomData [NSString stringWithFormat:@"%d", arc4random_uniform(1000000)]
 
-@interface WeiboViewController ()
+@interface WeiboSortByLikeViewController ()
 
 @property (strong, nonatomic) NSMutableArray *arrayModel;
 @property (strong, nonatomic) NSMutableArray *arrayModelDay;
@@ -23,7 +22,7 @@
 
 @end
 
-@implementation WeiboViewController
+@implementation WeiboSortByLikeViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -42,17 +41,8 @@
     
     self.view.backgroundColor = [UIColor colorWithRed:238/255.0 green:238/255.0 blue:238/255.0 alpha:1];
     
-    //添加背景图片 view
-    //UIImageView * bgd = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, LZHScreenSize.width, LZHScreenSize.height)];
-    //bgd.image = [UIImage imageNamed:@"BlueSky"];
-    //[self.view addSubview:bgd];
-    
     //获取 appDelegate 对象,以获取其中需要的属性.
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    //self.mainTableView.backgroundColor = [UIColor orangeColor];
-    
-    //self.view.backgroundColor = [UIColor orangeColor];
     
     //初始化 tableView
     [self initTableView];
@@ -62,12 +52,8 @@
     self.mainTableView.backgroundView.backgroundColor = [UIColor clearColor];
     self.mainTableView.backgroundColor = [UIColor clearColor];
     
-    UIView * positionMarkView = [[UIView alloc] initWithFrame:CGRectMake(0, 78, self.appDelegate.screenSize.width, 1)];
-    positionMarkView.backgroundColor = [UIColor redColor];
-    [self.view addSubview:positionMarkView];
-    
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    self.weiboArray = [defaults objectForKey:@"weiboList"];
+    self.weiboArray = [defaults objectForKey:@"weiboLikeList"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -77,8 +63,9 @@
 
 //初始化TableVIew
 - (void) initTableView{
-    //self.mainTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.appDelegate.UINavigationBarHeight, self.appDelegate.screenSize.width, self.appDelegate.screenSize.height-self.appDelegate.UINavigationBarHeight) style:UITableViewStyleGrouped];
-    self.mainTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.appDelegate.screenSize.width, self.appDelegate.screenSize.height) style:UITableViewStyleGrouped];
+    //self.mainTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.appDelegate.screenSize.width, self.appDelegate.screenSize.height) style:UITableViewStyleGrouped];
+    self.mainTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.appDelegate.screenSize.width, self.appDelegate.screenSize.height) style:UITableViewStylePlain];
+    
     [self.view addSubview:self.mainTableView];
     
     self.mainTableView.dataSource = self;
@@ -139,7 +126,7 @@
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     NSString * httpAddress = [defaults objectForKey:@"HTTPAddress"];
     
-    NSString * strUrl = [NSString stringWithFormat:@"%@/checkByTime?userID=%@&time=%@&check=%@&requestNumber=%d", httpAddress, @"userName" , currTime, [self getCheckCodeWithRequest:@"checkByTime" andTime:currTime], 20 ];
+    NSString * strUrl = [NSString stringWithFormat:@"%@/checkByAgreement?userID=%@&time=%@&check=%@&requestNumber=%d", httpAddress, @"userName" , currTime, [self getCheckCodeWithRequest:@"checkByAgreement" andTime:currTime], 20 ];
     //strUrl = [strUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     strUrl = [strUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *URL = [NSURL URLWithString:strUrl];
@@ -205,6 +192,9 @@
     
     [self setWeiboData:jsonStr];
     NSLog(@"数据刷新成功!");
+    
+    //重置接收到的消息
+    self.recvData = nil;
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
@@ -214,29 +204,23 @@
 
 
 - (void) setWeiboData:(NSString *) str{
-    NSDictionary * jsonDic = [LZHJsonEncoder dictionaryWithJsonString:str];
-    
+    NSDictionary * jsonDic = [LZHJsonEncoder dictionaryWithJsonString:str andSource:@"weiboSortByLikeViewController -1"];
     NSString * response = [NSString stringWithFormat:@"%@", [jsonDic objectForKey:@"response"]];
-    
-    NSDictionary * responseDic = [LZHJsonEncoder dictionaryWithJsonString:response];
-    
+    NSDictionary * responseDic = [LZHJsonEncoder dictionaryWithJsonString:response andSource:@"weiboSortByLikeViewController -2"];
     NSString * weiboListStr = [NSString stringWithFormat:@"%@", [responseDic objectForKey:@"weiboList"]];
-    
-    NSDictionary * weiboListDic = [LZHJsonEncoder dictionaryWithJsonString:weiboListStr];
-    
+    NSDictionary * weiboListDic = [LZHJsonEncoder dictionaryWithJsonString:weiboListStr andSource:@"weiboSortByLikeViewController -3"];
     NSMutableArray * weiboArray = [[NSMutableArray alloc] init];
-    
     NSInteger numberOfWeibo = [[NSString stringWithFormat:@"%@", [responseDic objectForKey:@"responseNumber"]] integerValue];
     
     for(NSInteger i=0; i<numberOfWeibo; ++i){
-        [weiboArray addObject:[LZHJsonEncoder dictionaryWithJsonString:[weiboListDic objectForKey:[NSString stringWithFormat:@"%ld", i]] ] ];
+        [weiboArray addObject:[LZHJsonEncoder dictionaryWithJsonString:[weiboListDic objectForKey:[NSString stringWithFormat:@"%ld", (long)i]]  andSource:@"weiboSortByLikeViewController -4"] ];
         //NSLog(@"\n%ld  %@   %@\n\n", (long)i, [weiboArray[i] objectForKey:@"userName"], [weiboArray[i] objectForKey:@"weiboDetail"]);
     }
     //设置微博列表
     self.weiboArray = weiboArray;
     
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:self.weiboArray forKey:@"weiboList"];
+    [defaults setObject:self.weiboArray forKey:@"weiboLikeList"];
     [defaults synchronize];
 }
 
@@ -268,41 +252,9 @@
     return cell;
 }
 
-//某一行将要显示时会调用此函数.可以用来进行行预加载.
-/*
- - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
- //NSLog(@"%ld-------%ld",indexPath.row ,indexPath.section);
- if(indexPath.row >= (NSInteger)_data.count-10){
- NSLog(@"Trigger!!!!!!!!!");
- for (int i = 0; i<20; i++) {
- [self.data insertObject:MJRandomData atIndex:self.data.count-1];
- [tableView reloadData];
- 
- }
- NSLog(@"I HAVE %ld DATAS",self.data.count);
- //[_data insertObject:MJRandomData atIndex:_data.count-1];
- }
- }
- */
-
 //该函数为UITabBarDelegate委托中的函数,点按 cell 后,将会触发此函数
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    ///////////////////
-    
-    
-    //floatView showInView];
-    
-    //self.edgesForExtendedLayout = UIRectEdgeNone;
-    //[fv bringSubviewToFront:self.mainTableView];
-    /*
-     UIView *myv = [[UIView alloc] initWithFrame:self.view.bounds];
-     myv.backgroundColor = [UIColor orangeColor];
-     [self.view addSubview:myv];
-     */
     NSLog(@"selected");
-    
-    //NSLog(@"+++++++++++++++++%@",(DiaryHistoryViewCell *)[tv cellForRowAtIndexPath:indexPath].text);
-    
     //取消选择当前 cell
     [tv deselectRowAtIndexPath:indexPath animated:YES];
 }
@@ -311,7 +263,6 @@
 //每个分组下对应的tableView高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     LZHWeiboCell * cell = (LZHWeiboCell *)[self tableView:tableView cellForRowAtIndexPath:indexPath];
-    //cell.cellHeight;
     return cell.cellHeight+16.5;
 }
 
@@ -322,44 +273,8 @@
 
 //该函数为UITableViewDataSource 委托中的必要委托函数,用于返回每个 section 个数.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    //return self.data.count;
-    //return 10;
     return self.weiboArray.count;
 }
 
-
-//每个分组上边预留的空白高度,一般来说,默认好看很多.
-/*
- -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
- return 20;
- }
- */
-
-//每个分组下边预留的空白高度,一般来说,默认好看很多.
-/*
- -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
- if (section==2){
- return 40;
- 
- }
- return 20;
- }
- */
-
-//用于设置 table 的每个 section 的头标
-/*
- - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
- return [NSString stringWithFormat:@"This is %ld part",(long)section];
- }
- */
-
-//用于设置 table 的每个 section 的脚标
-/*
- - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section{
- if (section == 2)
- return [NSString stringWithFormat:@"This is footer"];
- return [NSString stringWithFormat:@"NULL"];
- }
- */
 
 @end

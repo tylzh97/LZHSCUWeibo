@@ -14,7 +14,7 @@
 /**
  *  将 Json 转换成 NSDictionary
  */
-+ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;
++ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString andSource:(NSString *) source;
 
 /**
  *  将 NSDictionary 转换成 Json

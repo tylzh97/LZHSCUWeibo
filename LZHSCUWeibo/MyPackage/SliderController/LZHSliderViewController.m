@@ -41,6 +41,8 @@
 -(void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    //self.title = @"苟利国家生死以";
+    
     if([self.defaults objectForKey:@"UserName"] == nil){
         NSLog(@"未登录!");
         //LZHLoginViewController * loginView = [LZHLoginViewController new];
@@ -73,46 +75,23 @@
  */
 - (void)loadSilderBar {
     CGSize screenSize  = [UIScreen mainScreen].bounds.size;
-
-    
-    //设置 sliderBar 的位置
-    //CGFloat sliderBarX = 0;
-    //CGFloat sliderBarY = 0;
-    
-    CGFloat sliderBarW = self.view.bounds.size.width;
-    
-    //
-    CGFloat sliderBarH = 88;
-    //iPhone X 将高度设置为88
-    //if(true){//screenSize.width == 375 && screenSize.height == 812){
-    //    sliderBarH = 132;
-    //}
-    
-    
-    UIView * navBarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, sliderBarH)];
-    navBarView.backgroundColor = [UIColor whiteColor];
-    
-    UIBlurEffect * effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    UIVisualEffectView * effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-    effectView.frame = navBarView.bounds;
-    
-    [self.view addSubview:navBarView];
-    
-    UIView * sliderBarLine = [[UIView alloc] initWithFrame:CGRectMake(0, sliderBarH-0.5, ScreenWidth, 0.5)];
-    sliderBarLine.backgroundColor = [UIColor grayColor];
-    [navBarView addSubview:sliderBarLine];
-    
     
     // 创建SliderBar并设置大小 应该使用autolayout
-    LZHSliderBar* sliderBar = [[LZHSliderBar alloc]initWithFrame:CGRectMake(100, 50, sliderBarW-200, 34)];
+    LZHSliderBar* sliderBar = [[LZHSliderBar alloc]initWithFrame:CGRectMake(0, 0, 100, 30)];
     sliderBar.backgroundColor = [UIColor clearColor];
     self.sliderBar = sliderBar;
     self.sliderBar.delegate = self;
+    self.navigationItem.titleView = self.sliderBar;
     
-    //[self.view addSubview:sliderBar];
-    [navBarView addSubview:sliderBar];
+    UIBarButtonItem *settingBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[self reSizeImage:[UIImage imageNamed:@"setting"] toSize:CGSizeMake(30, 30)] style:UIBarButtonItemStylePlain target:self action:@selector(modalSetting:)];
+    self.navigationItem.leftBarButtonItem = settingBarButtonItem;
+    
+    //设置毛玻璃效果,反正我是没看出来
+    [self.navigationController.navigationBar setTranslucent:YES];
+    [self.navigationController.navigationBar setBackgroundColor:[UIColor redColor]];
     
     //添加设置按钮.
+    /*
     self.settingButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.settingButton.frame  = CGRectMake(0, 0, 30, 30);
     [self.settingButton setCenter:CGPointMake(35, sliderBar.center.y+5)];
@@ -120,6 +99,7 @@
     [self.settingButton addTarget:self action:@selector(modalSetting:) forControlEvents:UIControlEventTouchUpInside];
     //[self.settingButton setBackgroundColor:[UIColor redColor]];
     [navBarView addSubview:self.settingButton];
+    */
     
     /*
     self.vcDiscribeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
@@ -131,6 +111,18 @@
     //[self.vcDiscribeLabel setBackgroundColor:[UIColor redColor]];
     [navBarView addSubview:self.vcDiscribeLabel];
      */
+}
+
+//重置图像大小
+//苹果的ItemButton上的图像必须重置为与按钮大小等大才可.这种设计不统一很可能是由错误的设计造成的.
+- (UIImage *)reSizeImage:(UIImage *)image toSize:(CGSize)reSize
+{
+    UIGraphicsBeginImageContext(CGSizeMake(reSize.width, reSize.height));
+    [image drawInRect:CGRectMake(0, 0, reSize.width, reSize.height)];
+    UIImage *reSizeImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return [reSizeImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
 - (void) modalSetting:(UIButton *) settingButton{

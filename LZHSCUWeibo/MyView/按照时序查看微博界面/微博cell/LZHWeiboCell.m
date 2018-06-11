@@ -13,26 +13,7 @@
 
 @interface LZHWeiboCell ()
 
-/**用户头像 View*/
-@property (strong, nonatomic) UIImageView * userSculptureView;
-/**用户昵称标签*/
-@property (strong, nonatomic) UILabel * userNicknameLabel;
-/**时间与来源标签*/
-@property (strong, nonatomic) UILabel * timeAndSourceLabel;
-/**微博详情标签*/
-@property (strong, nonatomic) UILabel * weiboDetailLabel;
-/**微博脚标 View*/
-@property (strong, nonatomic) UIView * weiboTabbar;
-/**微博脚标:评论按钮*/
-@property (strong, nonatomic) UIButton * commentsButton;
-/** 微博脚标:点赞按钮*/
-@property (strong, nonatomic) UIButton * thumbsupButton;
-/**微博 cell 的界面*/
-@property (strong, nonatomic) UIView * cellContentView;
-
-@property (copy, nonatomic) NSString * wTimeString;
-
-@property (copy, nonatomic) NSString * wSourceString;
+@property (strong, nonatomic) NSMutableData * recvData;
 
 @end
 
@@ -69,6 +50,23 @@
     cellContentView.frame = CGRectMake(0, 0, LZHScreenWidth, cHeight);
     
 }
+
+- (UIButton *)delButton{
+    if(!_delButton){
+        CGSize screenSize = [UIScreen mainScreen].bounds.size;
+        
+        _delButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        CGFloat buttonL = 25;
+        CGPoint buttonO = CGPointMake(screenSize.width-buttonL-10, 10);
+        _delButton.frame = CGRectMake(buttonO.x, buttonO.y, buttonL, buttonL);
+        [_delButton setImage:[UIImage imageNamed:@"删除"] forState:UIControlStateNormal];
+        [_delButton addTarget:self action:@selector(delTrigger) forControlEvents:UIControlEventTouchUpInside];
+        
+    }
+    
+    return  _delButton;
+}
+
 //用户头像界面的 getter 方法
 - (UIImageView *)userSculptureView{
     if(!_userSculptureView){
@@ -132,19 +130,104 @@
     if(!_weiboTabbar){
         _weiboTabbar = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.weiboDetailLabel.frame)+10, [UIScreen mainScreen].bounds.size.width, 32)];
         //_weiboTabbar.backgroundColor = [UIColor redColor];
-        UIView * splitLine = [[UIView alloc] initWithFrame:CGRectMake(14, 0, [UIScreen mainScreen].bounds.size.width-28, 0.25)];
-        [splitLine setBackgroundColor:[UIColor grayColor]];
+        UIView * splitLine = [[UIView alloc] initWithFrame:CGRectMake(14, 0, [UIScreen mainScreen].bounds.size.width-28, 1)];
+        [splitLine setBackgroundColor:[UIColor colorWithRed:220/255.0 green:220/255.0 blue:220/255.0 alpha:1.0]];
         [_weiboTabbar addSubview:splitLine];
         
         _commentsButton = [self buttonWithFrame:CGRectMake(0, 0, _weiboTabbar.frame.size.width/2, _weiboTabbar.frame.size.height) andImage:@"评论" andTitile:@"260"];
         [_weiboTabbar addSubview:_commentsButton];
+        [_commentsButton addTarget:self action:@selector(commentPushed) forControlEvents:UIControlEventTouchUpInside];
+        //[_commentsButton setBackgroundColor:[UIColor redColor]];
         
         _thumbsupButton = [self buttonWithFrame:CGRectMake(_weiboTabbar.frame.size.width/2, 0, _weiboTabbar.frame.size.width/2, _weiboTabbar.frame.size.height) andImage:@"点赞" andTitile:@"1114"];
         [_weiboTabbar addSubview:_thumbsupButton];
+        [_thumbsupButton addTarget:self action:@selector(likePushed) forControlEvents:UIControlEventTouchUpInside];
+        //[_thumbsupButton setBackgroundColor:[UIColor greenColor]];
         
     }
     
     return _weiboTabbar;
+}
+
+- (void) delTrigger{
+    NSLog(@"点了删除");
+    
+    [self.delDelegate delWeibo:_weiboID andWeiboDetail:_weiboDetail];
+    
+}
+
+- (void) commentPushed{
+    NSLog(@"要评论%ld", (long)self.weiboID);
+}
+
+- (void) likePushed{
+    NSLog(@"点赞了%ld", (long)self.weiboID);
+    
+    //如果没有点过赞的话,则发送点赞请求
+    if(!self.haveLiked){
+        self.recvData = [[NSMutableData alloc] init];
+        NSString *currTime = [self getCurrTimeString];
+        NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+        NSString * httpAddress = [defaults objectForKey:@"HTTPAddress"];
+        
+        //NSString * localUserName = [defaults objectForKey:@"userName"];
+        NSString * localUserID = [defaults objectForKey:@"userID"];
+        
+        NSString * strUrl = [NSString stringWithFormat:@"%@/agreeWeibo?userID=%@&time=%@&check=%@&weiboID=%d", httpAddress, localUserID , currTime, [self getCheckCodeWithRequest:@"agreeWeibo" andTime:currTime], self.weiboID ];
+        strUrl = [strUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSURL *URL = [NSURL URLWithString:strUrl];
+        NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:URL];
+        [NSURLConnection connectionWithRequest:request delegate:self];
+    }
+    //否则发送取消点赞请求
+    else{
+        //disagreeWeibo?userID=[用户id]&time=[时间]&check=[验证码]&weiboID=[微博编号]
+        self.recvData = [[NSMutableData alloc] init];
+        NSString *currTime = [self getCurrTimeString];
+        NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+        NSString * httpAddress = [defaults objectForKey:@"HTTPAddress"];
+        
+        //NSString * localUserName = [defaults objectForKey:@"userName"];
+        NSString * localUserID = [defaults objectForKey:@"userID"];
+        
+        NSString * strUrl = [NSString stringWithFormat:@"%@/disagreeWeibo?userID=%@&time=%@&check=%@&weiboID=%d", httpAddress, localUserID , currTime, [self getCheckCodeWithRequest:@"disagreeWeibo" andTime:currTime], self.weiboID ];
+        strUrl = [strUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSURL *URL = [NSURL URLWithString:strUrl];
+        NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:URL];
+        
+        /*
+        NSURLResponse * response = [[NSURLResponse alloc] init];
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            //NSMutableData * dislikeData = data;
+            NSString *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSString * jsonStr = [NSString stringWithFormat:@"%@",text];
+            [self checkLikeData:jsonStr];
+        }];
+       */
+        
+        
+        [NSURLConnection connectionWithRequest:request delegate:self];
+    }
+    
+}
+
+- (NSString *) getCurrTimeString{
+    //获取系统当前时间
+    NSDate *currentDate = [NSDate date];
+    //用于格式化NSDate对象
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //设置格式：zzz表示时区
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    //NSDate转NSString
+    NSString *currentDateString = [dateFormatter stringFromDate:currentDate];
+    return currentDateString;
+}
+
+- (NSString *) getCheckCodeWithRequest:(NSString *)request andTime:(NSString *)timeStr{
+    NSString *checkCode = [lzhHash md5:[NSString stringWithFormat:@"%@%@", request, timeStr]];
+    checkCode = [lzhHash md5:[checkCode substringFromIndex:[checkCode length]-5]];
+    return [checkCode uppercaseString];
 }
 
 //创建一个带图标的 button
@@ -162,6 +245,7 @@
     
     UIImageView * imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     imgView.image = [UIImage imageNamed:imageName];
+    imgView.tag = 97;
     
     UIView * centerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, imgView.frame.size.width + centerLabel.frame.size.width+10, imgView.frame.size.height)];
     [centerView addSubview:imgView];
@@ -169,6 +253,11 @@
     [centerView addSubview:centerLabel];
     [centerView setCenter:CGPointMake(frame.size.width/2, frame.size.height/2)];
     centerView.tag = 98;
+    //设置为不接受点按事件,既将点按事件传递到该图层下方
+    //该属性的默认值方法为YES
+    centerView.userInteractionEnabled = NO;
+    
+    //centerView.backgroundColor = [UIColor orangeColor];
     
     [btn addSubview:centerView];
     
@@ -180,7 +269,125 @@
     return cHeight;
 }
 
+#pragma mark -NSURLConnectionDataDelegate的委托方法
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    //接收到服务器反馈消息(消息头)
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    //接收到部分数据
+    [self.recvData appendData:data];
+    
+    //NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+    NSString *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    NSLog(@"\n\n\n%@\n\n\n", text);
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection{
+    //接收到所有数据
+    //NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+    NSString *text = [[NSString alloc] initWithData:self.recvData encoding:NSUTF8StringEncoding];
+    
+    NSString * jsonStr = [NSString stringWithFormat:@"%@",text];
+    
+    NSLog(@"*******************\n\n%@\n\n**********************", jsonStr);
+    
+    [self checkLikeData:jsonStr];
+    NSLog(@"数据刷新成功!");
+    
+    //重置接收到的消息
+    self.recvData = nil;
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
+    //与服务器连接出错
+    NSLog(@"与服务器连接出错  %@",error);
+}
+
+- (void) checkLikeData:(NSString *) str{
+    NSDictionary * jsonDic = [LZHJsonEncoder dictionaryWithJsonString:str andSource:@"weiboViewController -1"];
+    NSString * response = [NSString stringWithFormat:@"%@", [jsonDic objectForKey:@"response"]];
+    NSDictionary * responseDic = [LZHJsonEncoder dictionaryWithJsonString:response andSource:@"weiboViewController -2"];
+    
+    //如果是点赞请求的话
+    if([[jsonDic objectForKey:@"request"] isEqualToString:@"agreeWeibo"]){
+        //点赞成功,将点赞按钮设置为点亮状态
+        if([[responseDic objectForKey:@"isSuccess"]  isEqual: @"TRUE"]){
+            //self.thumbsupNumber = self.thumbsupNumber + 1;
+            [self setHaveLiked:YES];
+            NSLog(@"点赞成功!");
+            [self setThumbsupNumber:_thumbsupNumber+1];
+            self.haveLiked = YES;
+        }
+        else{
+            NSLog(@"点赞失败!");
+        }
+    }
+    
+    else if([[jsonDic objectForKey:@"request"] isEqualToString:@"disagreeWeibo"]){
+        //取消点赞成功,将点赞按钮设置为熄灭状态
+        if([[responseDic objectForKey:@"isSuccess"]  isEqual: @"TRUE"]){
+            [self setHaveLiked:NO];
+            NSLog(@"取消点赞成功!");
+            [self setThumbsupNumber:_thumbsupNumber-1];
+            self.haveLiked = NO;
+        }
+        else{
+            NSLog(@"取消点赞失败!");
+        }
+    }
+}
+
+
+
 #pragma mark -重写的 set 方法,可以使数据改变的同时改变视图控件的参数
+
+- (void)setUserID:(NSInteger)userID{
+    _userID = userID;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSInteger localUserID = [[defaults objectForKey:@"userID"] intValue];
+    
+    if(localUserID == userID){
+        _delButton.hidden = NO;
+        [self.cellContentView addSubview:self.delButton];
+    }
+    else{
+        _delButton.hidden = YES;
+    }
+}
+
+- (void)setHaveLiked:(BOOL)haveLiked{
+    //如果原来为真
+    if(_haveLiked == true){
+        //且要变化为假时
+        if(haveLiked == false){
+            UIImageView * imgView = [self.thumbsupButton viewWithTag:97];
+            imgView.image = [UIImage imageNamed:@"点赞"];
+            //UILabel * likeLabel = [self.thumbsupButton viewWithTag:99];
+            //[self setThumbsupNumber:_thumbsupNumber-1];
+            //[likeLabel setText:[NSString stringWithFormat:@"%d", self.thumbsupNumber]];
+            
+            _haveLiked = haveLiked;
+        }
+    }
+    //如果原来为假
+    else if(_haveLiked == false){
+        //切要变化为真时
+        if(haveLiked == true){
+            UIImageView * imgView = [self.thumbsupButton viewWithTag:97];
+            imgView.image = [UIImage imageNamed:@"点赞-selected"];
+            //UILabel * likeLabel = [self.thumbsupButton viewWithTag:99];
+            //[self setThumbsupNumber:_thumbsupNumber+1];
+            //[likeLabel setText:[NSString stringWithFormat:@"%d", self.thumbsupNumber]];
+            
+            _haveLiked = haveLiked;
+        }
+    }
+}
+
 - (void)setUserNickname:(NSString *)userNickname{
     _userNickname = userNickname;
     _userNicknameLabel.text = userNickname;
@@ -245,6 +452,18 @@
     UILabel * thumbsupLabel = (UILabel *)[[_thumbsupButton viewWithTag:98] viewWithTag:99];
     thumbsupLabel.text = [NSString stringWithFormat:@"%ld", (long)_thumbsupNumber];
 }
+
+//重置对象的方法
+- (void) setSelfWithLZHWeiboCell:(LZHWeiboCell *)aCell{
+    [self setUserNickname:aCell.userNickname];
+    [self setPublishedTime:aCell.publishedTime];
+    [self setPublishedSource:aCell.publishedSource];
+    [self setWeiboDetail:aCell.weiboDetail];
+    [self setCommentsNumber:aCell.commentsNumber];
+    [self setThumbsupNumber:aCell.thumbsupNumber];
+    [self setWeiboID:aCell.weiboID];
+}
+
 
 @end
 /*

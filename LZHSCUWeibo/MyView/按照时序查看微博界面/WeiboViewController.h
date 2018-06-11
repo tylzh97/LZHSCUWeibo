@@ -18,7 +18,7 @@
 
 #import "MJRefresh.h"
 
-@interface WeiboViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, NSURLConnectionDataDelegate>
+@interface WeiboViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, NSURLConnectionDataDelegate, DelWeiboDelegate>
 
 @property (strong, nonatomic) AppDelegate * appDelegate;
 

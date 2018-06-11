@@ -20,13 +20,13 @@
  
  */
 
-+ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString {
++ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString  andSource:(NSString *) source{
     
-    if (jsonString == nil) {
+    NSLog(@"%@", source);
+    
+    if (jsonString == nil || [jsonString  isEqual: @""] || !jsonString) {
         
         return nil;
-        
-        
         
     }
     
@@ -44,11 +44,15 @@
     
     if(err) {
         
+        NSLog(@"%@", jsonData);
+        
         NSLog(@"json解析失败：%@",err);
         
         return nil;
         
     }
+    
+    NSLog(@"%@", source);
     
     return dic;
     
